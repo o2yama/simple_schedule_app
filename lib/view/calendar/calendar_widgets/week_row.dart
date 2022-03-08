@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:stv_test_app/model/calendar_data_model/calendar_week.dart';
-import 'package:stv_test_app/service/db.dart';
+import 'package:stv_test_app/repository/db.dart';
 import 'date_cell.dart';
 
 class WeekRow extends StatelessWidget {

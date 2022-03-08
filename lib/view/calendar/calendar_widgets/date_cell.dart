@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stv_test_app/common/app_theme.dart';
 import 'package:stv_test_app/common/convertor.dart';
 import 'package:stv_test_app/model/calendar_data_model/calendar_date.dart';
-import 'package:stv_test_app/service/db.dart';
+import 'package:stv_test_app/repository/db.dart';
 import 'package:stv_test_app/view/calendar/calendar_model.dart';
 import 'package:stv_test_app/view/date_card_scroll_view/date_card_list_view.dart';
 import 'package:stv_test_app/view/date_card_scroll_view/date_list_index_state.dart';
 
-class DateCell extends HookWidget {
+class DateCell extends ConsumerWidget {
   DateCell({
     Key? key,
     required this.calendarDate,
@@ -31,9 +32,9 @@ class DateCell extends HookWidget {
   final CalendarDate calendarDate;
 
   @override
-  Widget build(BuildContext context) {
-    final _calendarModel = useProvider(calendarModelProvider);
-    final _indexController = useProvider(dateCardIndexProvider.notifier);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _calendarModel = ref.watch(calendarModelProvider);
+    final _indexController = ref.watch(dateCardIndexProvider.notifier);
 
     Color dateColor() {
       if (!calendarDate.isEnabled) {
@@ -72,7 +73,7 @@ class DateCell extends HookWidget {
                         width: 40,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: dateColor()),
+                          border: Border.all(color: AppTheme.primaryColor),
                         ),
                         child: Center(
                           child: Text(

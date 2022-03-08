@@ -15,7 +15,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   freezed_annotation: ^0.14.2
-  hooks_riverpod: ^0.14.0+4
+  flutter_riverpod: ^1.0.3
   intl: ^0.17.0
   json_serializable: ^4.1.4
   moor_flutter: ^4.0.0
@@ -27,7 +27,7 @@ dev_dependencies:
     sdk: flutter
   freezed:
   moor_generator:
-  pedantic_mono: any
+  flutter_lints:
 
 flutter:
   uses-material-design: true

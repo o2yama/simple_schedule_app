@@ -1,19 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:stv_test_app/common/app_theme.dart';
 import 'package:stv_test_app/common/convertor.dart';
 import 'package:stv_test_app/model/calendar_data_model/term.dart';
 import 'package:stv_test_app/view/calendar/calendar_model.dart';
 
-class CalendarHeader extends HookWidget {
+class CalendarHeader extends ConsumerWidget {
   const CalendarHeader({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _calendarModel = useProvider(calendarModelProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _calendarModel = ref.watch(calendarModelProvider);
 
     return Column(
       children: [
@@ -41,9 +40,7 @@ class CalendarHeader extends HookWidget {
             .values()
             .map(
               (date) => PopupMenuItem<DateTime>(
-                onTap: () {
-                  calendarModel.selectMonth(date);
-                },
+                onTap: () => calendarModel.selectMonth(date),
                 child: SizedBox(
                   width: 100,
                   height: 30,
@@ -61,9 +58,7 @@ class CalendarHeader extends HookWidget {
         child: Row(
           children: [
             Text(
-              DateFormat('yyyy年MM月 ').format(
-                calendarModel.targetMonth,
-              ),
+              DateFormat('yyyy年MM月 ').format(calendarModel.targetMonth),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

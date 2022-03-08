@@ -1,27 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moor_flutter/moor_flutter.dart' as moor;
 import 'package:stv_test_app/common/app_theme.dart';
-import 'package:stv_test_app/service/db.dart';
-import 'package:stv_test_app/view/common/loading_view.dart';
+import 'package:stv_test_app/repository/db.dart';
+import 'package:stv_test_app/view/common/widgets/loading_view.dart';
+import 'package:stv_test_app/view/common/widgets/bottom_picker.dart';
 import 'package:stv_test_app/view/schedule_page/schedule_arguments.dart';
 import 'schedule_model.dart';
 
 final titleController = TextEditingController();
 final commentController = TextEditingController();
 
-class SchedulePage extends HookWidget {
+class SchedulePage extends ConsumerWidget {
   const SchedulePage({required this.arguments, Key? key}) : super(key: key);
+
   final ScheduleArguments arguments;
 
+  static Route<Widget> route(ScheduleArguments arguments) {
+    return MaterialPageRoute<Widget>(
+      builder: (_) => SchedulePage(arguments: arguments),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
-    final _db = useProvider(dbProvider);
-    final _scheduleModel = useProvider(scheduleModelProvider);
-    final _isLoading = useProvider(loadingState);
-    final _loadingController = useProvider(loadingState.notifier);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _db = ref.watch(dbProvider);
+    final _scheduleModel = ref.watch(scheduleModelProvider);
+    final _isLoading = ref.watch(loadingState);
+    final _loadingController = ref.watch(loadingState.notifier);
 
     Widget _backButton() {
       return IconButton(
@@ -75,21 +83,6 @@ class SchedulePage extends HookWidget {
       );
     }
 
-    Widget _bottomPicker(Widget picker) {
-      return Container(
-        height: 216,
-        padding: const EdgeInsets.only(top: 6),
-        color: CupertinoColors.white,
-        child: DefaultTextStyle(
-          style: const TextStyle(
-            color: CupertinoColors.black,
-            fontSize: 22,
-          ),
-          child: SafeArea(top: false, child: picker),
-        ),
-      );
-    }
-
     Widget _isAllDaySwitch() {
       return ListTile(
         tileColor: Colors.white,
@@ -126,7 +119,7 @@ class SchedulePage extends HookWidget {
                       ],
                     ),
                   ),
-                  _bottomPicker(
+                  bottomPicker(
                     CupertinoDatePicker(
                       mode: _scheduleModel.isAllDay
                           ? CupertinoDatePickerMode.date
@@ -162,9 +155,7 @@ class SchedulePage extends HookWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CupertinoButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 5,
@@ -174,7 +165,7 @@ class SchedulePage extends HookWidget {
                       ],
                     ),
                   ),
-                  _bottomPicker(
+                  bottomPicker(
                     CupertinoDatePicker(
                       mode: _scheduleModel.isAllDay
                           ? CupertinoDatePickerMode.date
@@ -322,9 +313,10 @@ class SchedulePage extends HookWidget {
       child: Scaffold(
         backgroundColor: AppTheme.backGroundColor,
         appBar: AppBar(
-            leading: _backButton(),
-            title: Text(arguments.schedule == null ? '予定の追加' : '予定の編集'),
-            actions: [_storeButton()]),
+          leading: _backButton(),
+          title: Text(arguments.schedule == null ? '予定の追加' : '予定の編集'),
+          actions: [_storeButton()],
+        ),
         body: _isLoading
             ? const LoadingView()
             : SingleChildScrollView(

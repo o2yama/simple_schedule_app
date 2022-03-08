@@ -1,5 +1,5 @@
-import 'package:stv_test_app/service/db.dart';
-import '../../common/convertor.dart';
+import 'package:stv_test_app/common/convertor.dart';
+import 'package:stv_test_app/repository/db.dart';
 
 class CalendarDate {
   CalendarDate({
