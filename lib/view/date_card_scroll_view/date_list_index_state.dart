@@ -1,4 +1,4 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stv_test_app/model/calendar_data_model/calendar_date.dart';
 
 final dateCardIndexProvider = StateNotifierProvider<DateCardIndexState, int>(

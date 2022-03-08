@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:stv_test_app/service/db.dart';
+import 'package:stv_test_app/repository/db.dart';
 import 'package:stv_test_app/view/schedule_page/schedule_page.dart';
 
 final scheduleModelProvider = ChangeNotifierProvider.autoDispose(

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:stv_test_app/model/calendar_data_model/calendar_date.dart';
 import 'package:stv_test_app/common/convertor.dart';
-import 'package:stv_test_app/routing/app_routes.dart';
+import 'package:stv_test_app/model/calendar_data_model/calendar_date.dart';
 import 'package:stv_test_app/view/schedule_page/schedule_arguments.dart';
 import 'package:stv_test_app/view/schedule_page/schedule_model.dart';
+import 'package:stv_test_app/view/schedule_page/schedule_page.dart';
 
-class DateCardWidget extends HookWidget {
+class DateCardWidget extends ConsumerWidget {
   const DateCardWidget({required this.calendarDate, Key? key})
       : super(key: key);
   final CalendarDate calendarDate;
 
   @override
-  Widget build(BuildContext context) {
-    final _scheduleModel = useProvider(scheduleModelProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _scheduleModel = ref.watch(scheduleModelProvider);
 
     Widget _scheduleCard(int index) {
       final schedule = calendarDate.schedules[index];
@@ -25,12 +25,14 @@ class DateCardWidget extends HookWidget {
           _scheduleModel
             ..setSchedule(schedule)
             ..startEditing();
-          Navigator.pushNamed(
+          Navigator.push(
             context,
-            AppRoutes.scheduleDetail,
-            arguments: ScheduleArguments(
+            SchedulePage.route(
+              ScheduleArguments(
                 calendarDate: calendarDate,
-                schedule: calendarDate.schedules[index]),
+                schedule: calendarDate.schedules[index],
+              ),
+            ),
           );
         },
         title: Row(
@@ -44,16 +46,18 @@ class DateCardWidget extends HookWidget {
                         style: TextStyle(fontSize: 12),
                       ),
                     )
-                  : Column(children: [
-                      Text(
-                        DateFormat('hh:mm').format(schedule.start!),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      Text(
-                        DateFormat('hh:mm').format(schedule.end!),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ]),
+                  : Column(
+                      children: [
+                        Text(
+                          DateFormat('hh:mm').format(schedule.start!),
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        Text(
+                          DateFormat('hh:mm').format(schedule.end!),
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
             ),
             const SizedBox(width: 8),
             Container(width: 3, height: 50, color: Colors.blue),
@@ -74,7 +78,7 @@ class DateCardWidget extends HookWidget {
         child: calendarDate.schedules.isEmpty
             ? const Center(
                 child: Text(
-                  '予定がありません。',
+                  '予定がありません',
                   style: TextStyle(fontSize: 12),
                 ),
               )
@@ -140,10 +144,9 @@ class DateCardWidget extends HookWidget {
               ..start = selectedDate
               ..end = selectedDate.add(const Duration(hours: 1))
               ..clearText();
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              AppRoutes.scheduleDetail,
-              arguments: ScheduleArguments(calendarDate: calendarDate),
+              SchedulePage.route(ScheduleArguments(calendarDate: calendarDate)),
             );
           },
           icon: const Icon(Icons.add, color: Colors.blue),

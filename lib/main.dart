@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stv_test_app/routing/app_routes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stv_test_app/view/calendar/calendar.dart';
 import 'common/app_theme.dart';
 
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('ja', 'JP'),
       home: const Calendar(),
-      onGenerateRoute: onGenerateRoute,
     );
   }
 }
